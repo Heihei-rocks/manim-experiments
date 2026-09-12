@@ -11,8 +11,8 @@ uv sync
 # Render animation
 uv run manim -pql basic_example.py BasicExample
 
-# View videos
-ls media/videos/*/480p15/*.mp4
+# View GIFs
+ls media/animations/*.gif
 ```
 
 ## Project Structure
@@ -30,7 +30,7 @@ manim-experiments/
 │   └── skills/
 │       ├── manim-best-practices.md
 │       └── manim-agent-skill.md
-├── media/videos/                 # Rendered animations
+├── media/animations/             # Animated GIFs
 └── pyproject.toml
 ```
 
@@ -39,49 +39,49 @@ manim-experiments/
 ### 1. Basic Example
 Simple circle creation with fill and stroke.
 
-![Basic Example](media/videos/basic_example/480p15/BasicExample.mp4)
+![Basic Example](media/animations/basic_example.gif)
 
 **Code**: `basic_example.py`
 
 ### 2. Animated Line
 Axes with quadratic function plot and moving point.
 
-![Animated Line](media/videos/animated_line/480p15/AnimatedLine.mp4)
+![Animated Line](media/animations/animated_line.gif)
 
 **Code**: `animated_line.py`
 
 ### 3. Transform Example
 Square morphing into circle with text labels.
 
-![Transform Example](media/videos/transform_example/480p15/TransformExample.mp4)
+![Transform Example](media/animations/transform_example.gif)
 
 **Code**: `transform_example.py`
 
 ### 4. Complex Animation
 9 colored circles in grid with rotation and expansion.
 
-![Complex Animation](media/videos/complex_animation/480p15/ComplexAnimation.mp4)
+![Complex Animation](media/animations/complex_animation.gif)
 
 **Code**: `complex_animation.py`
 
 ### 5. Fibonacci Spiral
 Golden ratio concept with growing rectangles.
 
-![Fibonacci Spiral](media/videos/fibonacci_spiral/480p15/FibonacciSpiral.mp4)
+![Fibonacci Spiral](media/animations/fibonacci_spiral.gif)
 
 **Code**: `fibonacci_spiral.py`
 
 ### 6. Best Practices Demo
 Overview of key Manim patterns and practices.
 
-![Best Practices Demo](media/videos/best_practices_demo/480p15/BestPracticesDemo.mp4)
+![Best Practices Demo](media/animations/best_practices_demo.gif)
 
 **Code**: `best_practices_demo.py`
 
 ### 7. Recent Showcase
 Summary of all experiments.
 
-![Recent Showcase](media/videos/recent_showcase/480p15/RecentExperimentShowcase.mp4)
+![Recent Showcase](media/animations/recent_showcase.gif)
 
 **Code**: `recent_showcase.py`
 
