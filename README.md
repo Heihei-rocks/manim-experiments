@@ -85,6 +85,25 @@ Summary of all experiments.
 
 **Code**: `recent_showcase.py`
 
+## Advanced Visualization Topics
+
+### Topic 1: Data Variation Analysis
+Research-based visualizations of how data varies: histograms morphing to kernel densities, ridgeline plots, violin+jitter, and novel breathing variation field.
+
+![Data Variation Histogram](media/animations/data_variation_histogram.gif)
+*Histogram → Density morph*
+
+![Ridgeline](media/animations/data_variation_ridgeline.gif)
+*Ridgeline plots across conditions*
+
+![Violin Jitter](media/animations/data_variation_violin.gif)
+*Violin + jitter anatomy*
+
+![Breathing Field](media/animations/data_variation_breathing.gif)
+*Novel breathing variation field*
+
+**Code**: `data_variation_analysis.py`
+
 ## Best Practices
 
 ### Installation
