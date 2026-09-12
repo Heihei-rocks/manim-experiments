@@ -8,3 +8,6 @@ dependencies = [
 
 [tool.uv]
 python-preference = "only-managed"
+
+[tool.manim]
+quality = "low_quality"
