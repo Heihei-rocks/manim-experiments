@@ -1,74 +1,159 @@
 # Manim Experiments
 
-Python Manim Community Edition (v0.21.0) experiments using Grant Sanderson's library.
+Python Manim Community Edition experiments and examples for creating 3Blue1Brown style mathematical animations.
 
-## Setup
-
-This project uses `uv` for Python environment management.
+## Quick Start
 
 ```bash
+# Setup
 uv sync
-uv run manim --version
+
+# Render animation
+uv run manim -pql basic_example.py BasicExample
+
+# View videos
+ls media/videos/*/480p15/*.mp4
 ```
 
-## Best Practices Research
+## Project Structure
 
-### Key Skills/Agents
-- **adithya-s-k/manim_skill**: Comprehensive collection of best practices, patterns, examples (1,054 stars)
-  - URL: https://github.com/adithya-s-k/manim_skill
-  - Includes manimce-best-practices skill
-- **manim_skill**: Open-source AI agent skill (yusuke710)
-  - URL: https://github.com/adithya-s-k/manim_skill
-- **Alternative skills**: animo.video/skills directory, skillsllm.com/manim-skill
+```
+manim-experiments/
+├── basic_example.py              # Simple circle
+├── animated_line.py              # Axes with moving point
+├── transform_example.py          # Shape transformation
+├── complex_animation.py          # Grid with animations
+├── fibonacci_spiral.py           # Mathematical concept
+├── best_practices_demo.py        # Best practices overview
+├── recent_showcase.py            # Showcase of experiments
+├── docs/
+│   └── skills/
+│       ├── manim-best-practices.md
+│       └── manim-agent-skill.md
+├── media/videos/                 # Rendered animations
+└── pyproject.toml
+```
 
-### Installation Best Practices
-1. **Use uv** for Python version management (project configured for Python 3.11)
-2. **Install prerequisites**: cairo, pkg-config, ffmpeg, LaTeX
-3. **Use `pip install manim`** for Community Edition
-4. **Check health**: `manim checkhealth`
-5. **Quality flags**: -ql (low), -qm (medium), -qh (high), -qk (4k)
-6. **Development**: Always use `-pql` for preview low quality
-7. **Separate projects**: Each project gets its own virtual environment
+## Recent Experiments
 
-### Common Pitfalls
-- Version confusion: Manim Community (`from manim import *`, `manim` CLI) vs ManimGL (`from manimlib import *`, `manimgl` CLI)
-- Missing system dependencies (cairo, pkg-config, ffmpeg)
-- Outdated tutorials referencing old ManimGL syntax
-- Text rendering requires manimpango
-- LaTeX required for MathTex
-- Performance: Use quality flags appropriately
+### 1. Basic Example
+Simple circle creation with fill and stroke.
 
-### Recommended Workflow for Agents
-1. **Research**: Check official docs (docs.manim.community), examples
-2. **Storyboard**: Break animation into chunks
-3. **Map primitives**: Identify Manim mobjects/animations needed
-4. **Generate code**: Follow patterns from manim_skill
-5. **Render**: Use low quality for testing, high for final
-6. **Iterate**: Adjust timing, positioning, colors
+![Basic Example](media/videos/basic_example/480p15/BasicExample.mp4)
 
-## Examples
+**Code**: `basic_example.py`
 
-See `*.py` files for various animation examples:
-- basic_example.py - Simple circle
-- animated_line.py - Axes with moving point
-- transform_example.py - Shape transformation
-- complex_animation.py - Grid with animations
-- fibonacci_spiral.py - Mathematical concept
+### 2. Animated Line
+Axes with quadratic function plot and moving point.
 
-## Rendering
+![Animated Line](media/videos/animated_line/480p15/AnimatedLine.mp4)
+
+**Code**: `animated_line.py`
+
+### 3. Transform Example
+Square morphing into circle with text labels.
+
+![Transform Example](media/videos/transform_example/480p15/TransformExample.mp4)
+
+**Code**: `transform_example.py`
+
+### 4. Complex Animation
+9 colored circles in grid with rotation and expansion.
+
+![Complex Animation](media/videos/complex_animation/480p15/ComplexAnimation.mp4)
+
+**Code**: `complex_animation.py`
+
+### 5. Fibonacci Spiral
+Golden ratio concept with growing rectangles.
+
+![Fibonacci Spiral](media/videos/fibonacci_spiral/480p15/FibonacciSpiral.mp4)
+
+**Code**: `fibonacci_spiral.py`
+
+### 6. Best Practices Demo
+Overview of key Manim patterns and practices.
+
+![Best Practices Demo](media/videos/best_practices_demo/480p15/BestPracticesDemo.mp4)
+
+**Code**: `best_practices_demo.py`
+
+### 7. Recent Showcase
+Summary of all experiments.
+
+![Recent Showcase](media/videos/recent_showcase/480p15/RecentExperimentShowcase.mp4)
+
+**Code**: `recent_showcase.py`
+
+## Best Practices
+
+### Installation
 
 ```bash
-# Low quality preview (fast)
-uv run manim -pql scene.py SceneName
+# Python environment
+uv sync
 
-# Medium quality
-uv run manim -pm scene.py SceneName
-
-# High quality
-uv run manim -pqh scene.py SceneName
-
-# No preview, just render
-uv run manim -ql scene.py SceneName
+# Check installation
+uv run manim --version
+uv run manim checkhealth
 ```
 
-Videos output to `media/videos/<scene>/480p15/<Scene>.mp4`
+### Quality Flags
+
+- `-pql`: Preview low quality (fast development)
+- `-pm`: Preview medium quality
+- `-pqh`: Preview high quality
+- `-qk`: 4K quality
+
+### Core Patterns
+
+**Basic Scene**
+```python
+from manim import *
+
+class MyScene(Scene):
+    def construct(self):
+        circle = Circle()
+        self.play(Create(circle))
+        self.wait()
+```
+
+**Grouping**
+```python
+group = VGroup(Circle(), Square(), Triangle())
+group.arrange(RIGHT)
+```
+
+**Sequential Animation**
+```python
+self.play(*[GrowFromCenter(obj) for obj in objects], lag_ratio=0.1)
+```
+
+**Transformations**
+```python
+self.play(Transform(old_shape, new_shape))
+```
+
+## Skills & References
+
+- [Manim Best Practices](docs/skills/manim-best-practices.md) - Comprehensive guide
+- [Agent Skill](docs/skills/manim-agent-skill.md) - For AI agents using Manim
+- Official docs: https://docs.manim.community/
+- GitHub: https://github.com/ManimCommunity/manim
+
+## Existing Skills
+
+- **adithya-s-k/manim_skill**: Comprehensive best practices collection (1,054 stars)
+  - URL: https://github.com/adithya-s-k/manim_skill
+  - Includes manimce-best-practices with rule files
+
+## Common Pitfalls
+
+1. Version confusion: ManimCE vs ManimGL
+2. Missing system dependencies (cairo, ffmpeg, LaTeX)
+3. Outdated tutorials with old syntax
+4. Performance: Always use low quality for testing
+
+## License
+
+MIT
