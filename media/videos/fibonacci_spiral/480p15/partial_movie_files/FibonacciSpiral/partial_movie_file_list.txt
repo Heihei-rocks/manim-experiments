@@ -1,9 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/2118183852_3960531689_223132457.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_3880968470_1996480822.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_1219049666_1224496645.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_3880968470_3649977265.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_1155094958_3784465085.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_4046863825_1386290854.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_2172442419_2604374270.mp4'
-file 'file:/Users/djohnson334/manim-experiments/media/videos/fibonacci_spiral/480p15/partial_movie_files/FibonacciSpiral/366519484_2645707024_1219083125.mp4'
