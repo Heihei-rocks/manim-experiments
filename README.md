@@ -138,6 +138,45 @@ Accumulated sensor intensity visualization showing red (high coverage) to blue (
 - Heat-map accumulation algorithm
 - Camera movement and 3D perspective control
 
+### Topic 3: Geolocation Function Visualization
+Comprehensive exploration of geographic coordinate systems, distance calculations, and positioning algorithms with both traditional and novel visualizations.
+
+#### Great Circle Routes on Sphere
+Geodesic paths between world cities using spherical linear interpolation (slerp) on a 3D globe.
+
+![Great Circle Routes](media/animations/geolocation_GreatCircleRoute.gif)
+
+#### Haversine Distance Calculation
+Distance formula visualization between NYC and London with expanding range circles and precise kilometer calculation.
+
+![Haversine Distance](media/animations/geolocation_HaversineDistance.gif)
+
+#### GPS Trilateration
+Position finding from multiple satellite distances showing intersection of range circles.
+
+![Trilateration](media/animations/geolocation_TrilaterationVisualization.gif)
+
+#### Coordinate System Transformation
+Animated morphing between geographic (lat/long) and Cartesian coordinate grids.
+
+![Coordinate Transform](media/animations/geolocation_CoordinateGridTransform.gif)
+
+#### Signal Strength Landscape (Novel)
+3D surface visualization showing combined signal strength from multiple towers, with device path following the landscape topology.
+
+![Signal Strength Landscape](media/animations/geolocation_SignalStrengthLandscape.gif)
+
+**Code**: `geolocation_functions.py`
+
+**Features Implemented:**
+- Spherical linear interpolation for great circles
+- Haversine distance formula with Earth radius
+- Trilateration positioning algorithm
+- Dynamic coordinate system transformations
+- Inverse-square law signal propagation
+- Surface projection for signal strength
+- Real-time geodetic calculations
+
 ## Best Practices
 
 ### Installation
