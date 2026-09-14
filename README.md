@@ -104,6 +104,14 @@ Research-based visualizations of how data varies: histograms morphing to kernel 
 
 **Code**: `data_variation_analysis.py`
 
+### Topic 2: Aircraft with Trails/Sensors Over Terrain
+2D top-down flight path animation with fading trails and sensor pulses over synthetic terrain.
+
+![Aircraft 2D Top-Down](media/animations/aircraft_2d_topdown.gif)
+*Aircraft following an elliptical path with trails and sensors*
+
+**Code**: `aircraft_trails_terrain.py`
+
 ## Best Practices
 
 ### Installation
