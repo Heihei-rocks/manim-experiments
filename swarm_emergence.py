@@ -151,38 +151,28 @@ class AntColonyPheromone(Scene):
         food_label = Text("Food", font_size=16, font="Monospace").next_to(food, UP, buff=0.1)
         self.add(nest, food, nest_label, food_label)
 
-        # Pheromone grid
-        grid_size = 20
-        pheromone = np.zeros((grid_size, grid_size))
-        pheromone_cells = []
+        # Pheromone visualization - use single surface instead of grid
+        pheromone_surface = Rectangle(width=10, height=7, stroke_width=0)
+        pheromone_surface.set_fill(YELLOW, opacity=0)
+        self.add(pheromone_surface)
 
-        for i in range(grid_size):
-            for j in range(grid_size):
-                x = (i - grid_size/2) * 0.5
-                y = (j - grid_size/2) * 0.35
-                cell = Square(side_length=0.45, stroke_width=0)
-                cell.move_to(np.array([x, y, 0]))
-                cell.set_fill(YELLOW, opacity=0)
-                cell.grid_i = i
-                cell.grid_j = j
-                pheromone_cells.append(cell)
-                self.add(cell)
+        # Track pheromone as single intensity value
+        pheromone_intensity = [0]
 
         # Ants
         n_ants = 12
-        ants = []
+        ants = VGroup()
         for _ in range(n_ants):
             ant = Dot(nest.get_center(), radius=0.08, color=RED)
             ant.has_food = False
             ant.direction = np.random.uniform(-PI, PI)
-            ants.append(ant)
-            self.add(ant)
+            ants.add(ant)
+
+        self.add(ants)
 
         def update_ants():
-            nonlocal pheromone
-
-            # Evaporate pheromone
-            pheromone *= 0.97
+            # Decay pheromone
+            pheromone_intensity[0] *= 0.995
 
             for ant in ants:
                 pos = ant.get_center()
@@ -224,21 +214,17 @@ class AntColonyPheromone(Scene):
                     ant.has_food = False
                     ant.set_color(RED)
 
-                # Deposit pheromone if carrying food
+                # Accumulate pheromone when carrying food
                 if ant.has_food:
-                    gi = int((new_pos[0] + 5) / 0.5)
-                    gj = int((new_pos[1] + 3.5) / 0.35)
-                    if 0 <= gi < grid_size and 0 <= gj < grid_size:
-                        pheromone[gi, gj] = min(pheromone[gi, gj] + 0.5, 1.0)
+                    pheromone_intensity[0] = min(pheromone_intensity[0] + 0.002, 1.0)
 
-            # Update pheromone visualization
-            for cell in pheromone_cells:
-                i, j = cell.grid_i, cell.grid_j
-                opacity = pheromone[i, j]
-                cell.set_fill(YELLOW, opacity=opacity * 0.7)
+            # Update pheromone surface
+            new_surface = Rectangle(width=10, height=7, stroke_width=0)
+            new_surface.set_fill(YELLOW, opacity=pheromone_intensity[0] * 0.3)
+            pheromone_surface.become(new_surface)
 
         # Run simulation
-        for frame in range(400):  # 400 frames
+        for frame in range(400):
             update_ants()
             self.wait(1/15)
 
@@ -265,7 +251,7 @@ class SelfOrganizingPattern(Scene):
 
         # Create agents
         n_agents = 35
-        agents = []
+        agents = VGroup()
 
         for _ in range(n_agents):
             pos = np.array([
@@ -275,8 +261,9 @@ class SelfOrganizingPattern(Scene):
             ])
             agent = Dot(pos, radius=0.1, color=BLUE)
             agent.velocity = np.array([0., 0., 0.])
-            agents.append(agent)
-            self.add(agent)
+            agents.add(agent)
+
+        self.add(agents)
 
         # Target spacing
         target_spacing = 0.9
@@ -328,7 +315,7 @@ class SelfOrganizingPattern(Scene):
                 agent.move_to(new_pos)
 
                 # Color by neighbors
-                neighbors = sum(1 for o in agents if i != agents.index(o) and
+                neighbors = sum(1 for j, o in enumerate(agents) if i != j and
                               0.7 < np.linalg.norm(agent.get_center() - o.get_center()) < 1.1)
 
                 if neighbors == 6:
@@ -375,7 +362,7 @@ class ConsensusEmergence(Scene):
 
         # Agents
         n_agents = 40
-        agents = []
+        agents = VGroup()
 
         for i in range(n_agents):
             pos = np.array([np.random.uniform(-1, 1), np.random.uniform(-1, 1), 0])
@@ -390,8 +377,9 @@ class ConsensusEmergence(Scene):
                 agent.set_color(BLUE)
 
             agent.certainty = np.random.uniform(0.3, 0.8)
-            agents.append(agent)
-            self.add(agent)
+            agents.add(agent)
+
+        self.add(agents)
 
         # Counter
         counter_text = Text("Red: 20  Blue: 20", font_size=20, font="Monospace")
