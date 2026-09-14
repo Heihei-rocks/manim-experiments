@@ -105,12 +105,38 @@ Research-based visualizations of how data varies: histograms morphing to kernel 
 **Code**: `data_variation_analysis.py`
 
 ### Topic 2: Aircraft with Trails/Sensors Over Terrain
-2D top-down flight path animation with fading trails and sensor pulses over synthetic terrain.
+Visualizations of aircraft flight paths, sensor coverage, and terrain mapping in both 2D and 3D. Features fading trails, pulsing sensors, formation flight, and novel heat-map coverage analysis.
+
+#### 2D Top-Down with Sensor Pulses
+Aircraft following an elliptical path with directional heading, fading red trail, and expanding blue sensor pulses.
 
 ![Aircraft 2D Top-Down](media/animations/aircraft_2d_topdown.gif)
-*Aircraft following an elliptical path with trails and sensors*
+
+#### 3D Terrain with Dynamic Flight Path
+Aircraft flying over multi-frequency procedural terrain with elevation-responsive coloring, sensor sphere, and spiral flight path.
+
+![Aircraft 3D Terrain](media/animations/aircraft_3d_terrain.gif)
+
+#### Formation Flight (Novel)
+Three coordinated aircraft in formation with independent trails and synchronized sensor coverage over terrain.
+
+![Multi-Aircraft Formation](media/animations/aircraft_formation.gif)
+
+#### Sensor Coverage Heat Map (Novel)
+Accumulated sensor intensity visualization showing red (high coverage) to blue (low coverage) mapping as aircraft patrols terrain.
+
+![Sensor Heat Map](media/animations/aircraft_heatmap.gif)
 
 **Code**: `aircraft_trails_terrain.py`
+
+**Features Implemented:**
+- Fading trail visualization with `TracedPath`
+- Directional aircraft heading based on velocity vector
+- Expanding sensor pulse rings
+- 3D procedural terrain generation
+- Multi-aircraft coordination
+- Heat-map accumulation algorithm
+- Camera movement and 3D perspective control
 
 ## Best Practices
 

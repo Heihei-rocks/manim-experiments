@@ -1,6 +1,6 @@
 [project]
 name = "manim-experiments"
-version = "0.14a"
+version = "0.15a"
 requires-python = ">=3.11"
 dependencies = [
     "manim",
