@@ -6,12 +6,12 @@ class BoidsFlocking(Scene):
     """Classic Boids algorithm: separation, alignment, cohesion"""
 
     def construct(self):
-        title = Text("Boids: Emergent Flocking from Simple Rules", font_size=28, font="Monospace")
+        title = Text("Boids: Flocking Birds", font_size=28, font="Monospace")
         title.to_edge(UP)
         self.add(title)
 
         # Create boids
-        n_boids = 30
+        n_boids = 25
         boids = []
 
         for _ in range(n_boids):
@@ -21,33 +21,28 @@ class BoidsFlocking(Scene):
                 0
             ])
             vel = np.array([
-                np.random.uniform(-0.5, 0.5),
-                np.random.uniform(-0.5, 0.5),
+                np.random.uniform(-1, 1),
+                np.random.uniform(-1, 1),
                 0
             ])
 
-            boid = Triangle().scale(0.1).set_fill(BLUE, opacity=0.8)
+            boid = Triangle().scale(0.12).set_fill(BLUE, opacity=0.9).set_stroke(WHITE, width=1)
             boid.move_to(pos)
+            boid.rotate(PI/2)  # Point upward initially
             boid.velocity = vel
-            boid.current_angle = 0  # Track rotation angle
+            boid.last_angle = PI/2
             boids.append(boid)
             self.add(boid)
 
-        # Trail tracking
-        trails = [TracedPath(boid.get_center, stroke_color=BLUE, stroke_width=1,
-                           dissipating_time=1.5, stroke_opacity=0.3) for boid in boids]
-        for trail in trails:
-            self.add(trail)
-
         # Simulation parameters
-        separation_dist = 0.5
-        alignment_dist = 1.5
-        cohesion_dist = 2.0
-        max_speed = 0.3
-        max_force = 0.05
+        separation_dist = 0.7
+        alignment_dist = 2.0
+        cohesion_dist = 2.5
+        max_speed = 1.5
+        max_force = 0.3
 
         def limit_vector(vec, max_val):
-            mag = np.linalg.norm(vec)
+            mag = np.linalg.norm(vec[:2])
             if mag > max_val:
                 return (vec / mag) * max_val
             return vec
@@ -67,44 +62,44 @@ class BoidsFlocking(Scene):
                         continue
 
                     diff = boid.get_center() - other.get_center()
-                    dist = np.linalg.norm(diff)
+                    dist = np.linalg.norm(diff[:2])
 
-                    # Separation: avoid crowding
-                    if dist < separation_dist and dist > 0:
+                    # Separation: avoid crowding neighbors
+                    if dist < separation_dist and dist > 0.01:
                         separation += diff / dist
                         sep_count += 1
 
-                    # Alignment: steer towards average heading
+                    # Alignment: match velocity of nearby boids
                     if dist < alignment_dist:
                         alignment += other.velocity
                         align_count += 1
 
-                    # Cohesion: steer towards average position
+                    # Cohesion: move toward center of nearby boids
                     if dist < cohesion_dist:
                         cohesion += other.get_center()
                         coh_count += 1
 
-                # Average and apply weights
+                # Calculate steering forces
                 if sep_count > 0:
                     separation /= sep_count
-                    separation = limit_vector(separation, max_force) * 1.5
+                    separation = limit_vector(separation, max_force) * 2.0
 
                 if align_count > 0:
                     alignment /= align_count
-                    alignment = limit_vector(alignment - boid.velocity, max_force)
+                    alignment = limit_vector(alignment - boid.velocity, max_force) * 1.0
 
                 if coh_count > 0:
                     cohesion /= coh_count
                     cohesion = cohesion - boid.get_center()
-                    cohesion = limit_vector(cohesion, max_force) * 0.5
+                    cohesion = limit_vector(cohesion, max_force) * 0.8
 
-                # Apply steering forces
+                # Apply forces
                 acceleration = separation + alignment + cohesion
-                boid.velocity += acceleration
+                boid.velocity += acceleration * dt * 60  # Frame rate independent
                 boid.velocity = limit_vector(boid.velocity, max_speed)
 
                 # Update position
-                new_pos = boid.get_center() + boid.velocity
+                new_pos = boid.get_center() + boid.velocity * dt * 60
 
                 # Wrap around edges
                 if new_pos[0] > 6:
@@ -118,11 +113,12 @@ class BoidsFlocking(Scene):
 
                 boid.move_to(new_pos)
 
-                # Rotate to face direction
-                if np.linalg.norm(boid.velocity[:2]) > 0.01:
-                    angle = np.arctan2(boid.velocity[1], boid.velocity[0])
-                    boid.rotate(angle - boid.current_angle)
-                    boid.current_angle = angle
+                # Point in direction of movement
+                if np.linalg.norm(boid.velocity[:2]) > 0.1:
+                    target_angle = np.arctan2(boid.velocity[1], boid.velocity[0]) + PI/2
+                    angle_diff = target_angle - boid.last_angle
+                    boid.rotate(angle_diff)
+                    boid.last_angle = target_angle
 
         dummy = Dot(ORIGIN, radius=0)
         dummy.add_updater(update_boids)
@@ -131,19 +127,33 @@ class BoidsFlocking(Scene):
         self.wait(15)
         dummy.remove_updater(update_boids)
 
+        # Add description
+        desc = Text(
+            "Each bird follows 3 rules: stay apart from neighbors,\\n"
+            "fly in the same direction as neighbors,\\n"
+            "and move toward the group center",
+            font_size=18,
+            font="Monospace",
+            color=GRAY
+        ).to_edge(DOWN)
+        self.play(FadeIn(desc))
+        self.wait(2)
+
 
 class AntColonyPheromone(Scene):
     """Ant colony with pheromone trail emergence"""
 
     def construct(self):
-        title = Text("Ant Colony: Pheromone Trail Emergence", font_size=28, font="Monospace")
+        title = Text("Ant Colony: Finding Food", font_size=28, font="Monospace")
         title.to_edge(UP)
         self.add(title)
 
         # Nest and food locations
-        nest = Circle(radius=0.3, color=ORANGE, fill_opacity=0.8).shift(LEFT * 4)
-        food = Circle(radius=0.3, color=GREEN, fill_opacity=0.8).shift(RIGHT * 4)
-        self.add(nest, food)
+        nest = Circle(radius=0.3, color=ORANGE, fill_opacity=0.8).shift(LEFT * 4 + DOWN * 0.5)
+        food = Circle(radius=0.3, color=GREEN, fill_opacity=0.8).shift(RIGHT * 4 + UP * 0.5)
+        nest_label = Text("Nest", font_size=16, font="Monospace").next_to(nest, DOWN, buff=0.1)
+        food_label = Text("Food", font_size=16, font="Monospace").next_to(food, UP, buff=0.1)
+        self.add(nest, food, nest_label, food_label)
 
         # Pheromone grid
         grid_size = 20
@@ -153,7 +163,7 @@ class AntColonyPheromone(Scene):
         for i in range(grid_size):
             for j in range(grid_size):
                 x = (i - grid_size/2) * 0.5
-                y = (j - grid_size/2) * 0.3
+                y = (j - grid_size/2) * 0.35
                 cell = Square(side_length=0.45, stroke_width=0)
                 cell.move_to(np.array([x, y, 0]))
                 cell.set_fill(YELLOW, opacity=0)
@@ -164,12 +174,12 @@ class AntColonyPheromone(Scene):
         self.add(pheromone_viz)
 
         # Ants
-        n_ants = 15
+        n_ants = 12
         ants = []
         for _ in range(n_ants):
-            ant = Dot(nest.get_center(), radius=0.06, color=RED)
+            ant = Dot(nest.get_center(), radius=0.08, color=RED)
             ant.has_food = False
-            ant.target = food.get_center()
+            ant.direction = np.random.uniform(-PI, PI)
             ants.append(ant)
             self.add(ant)
 
@@ -177,28 +187,35 @@ class AntColonyPheromone(Scene):
             nonlocal pheromone
 
             # Evaporate pheromone
-            pheromone *= 0.995
+            pheromone *= 0.98
 
             for ant in ants:
                 pos = ant.get_center()
 
-                # Random walk with pheromone bias
+                # Determine target
                 if not ant.has_food:
-                    direction = ant.target - pos
+                    target = food.get_center()
                 else:
-                    direction = nest.get_center() - pos
+                    target = nest.get_center()
 
-                direction += np.random.normal(0, 0.5, 3)
-                direction[2] = 0
+                # Move with some randomness
+                to_target = target - pos
+                if np.linalg.norm(to_target[:2]) > 0.1:
+                    to_target = to_target / np.linalg.norm(to_target[:2])
 
-                if np.linalg.norm(direction) > 0:
-                    direction = direction / np.linalg.norm(direction) * 0.05
+                # Add randomness
+                ant.direction += np.random.uniform(-0.3, 0.3)
+                random_move = np.array([np.cos(ant.direction), np.sin(ant.direction), 0])
 
-                new_pos = pos + direction
+                # Blend target and random
+                direction = 0.7 * to_target + 0.3 * random_move
+                direction = direction / np.linalg.norm(direction[:2])
+
+                new_pos = pos + direction * 0.15
 
                 # Bounds
-                new_pos[0] = np.clip(new_pos[0], -5, 5)
-                new_pos[1] = np.clip(new_pos[1], -2.5, 2.5)
+                new_pos[0] = np.clip(new_pos[0], -5.5, 5.5)
+                new_pos[1] = np.clip(new_pos[1], -3, 3)
 
                 ant.move_to(new_pos)
 
@@ -206,31 +223,24 @@ class AntColonyPheromone(Scene):
                 if not ant.has_food and np.linalg.norm(new_pos - food.get_center()) < 0.4:
                     ant.has_food = True
                     ant.set_color(ORANGE)
-                    ant.target = nest.get_center()
-                    # Deposit pheromone
-                    gi = int((new_pos[0] + 5) / 0.5)
-                    gj = int((new_pos[1] + 2.5) / 0.3)
-                    if 0 <= gi < grid_size and 0 <= gj < grid_size:
-                        pheromone[gi, gj] = min(pheromone[gi, gj] + 0.8, 1.0)
 
                 # Check if returned to nest
                 elif ant.has_food and np.linalg.norm(new_pos - nest.get_center()) < 0.4:
                     ant.has_food = False
                     ant.set_color(RED)
-                    ant.target = food.get_center()
 
                 # Deposit pheromone if carrying food
                 if ant.has_food:
                     gi = int((new_pos[0] + 5) / 0.5)
-                    gj = int((new_pos[1] + 2.5) / 0.3)
+                    gj = int((new_pos[1] + 3.5) / 0.35)
                     if 0 <= gi < grid_size and 0 <= gj < grid_size:
-                        pheromone[gi, gj] = min(pheromone[gi, gj] + 0.3, 1.0)
+                        pheromone[gi, gj] = min(pheromone[gi, gj] + 0.4, 1.0)
 
             # Update pheromone visualization
             for cell in pheromone_viz:
                 i, j = cell.grid_i, cell.grid_j
                 opacity = pheromone[i, j]
-                cell.set_fill(YELLOW, opacity=opacity * 0.6)
+                cell.set_fill(YELLOW, opacity=opacity * 0.7)
 
         dummy = Dot(ORIGIN, radius=0)
         dummy.add_updater(update_ants)
@@ -239,17 +249,29 @@ class AntColonyPheromone(Scene):
         self.wait(20)
         dummy.remove_updater(update_ants)
 
+        # Add description
+        desc = Text(
+            "Ants leave a chemical trail when carrying food.\\n"
+            "Other ants follow these trails, creating the\\n"
+            "shortest path between nest and food",
+            font_size=18,
+            font="Monospace",
+            color=GRAY
+        ).to_edge(DOWN)
+        self.play(FadeIn(desc))
+        self.wait(2)
+
 
 class SelfOrganizingPattern(Scene):
-    """Novel: Agents self-organize into hexagonal pattern"""
+    """Agents self-organize into hexagonal pattern"""
 
     def construct(self):
-        title = Text("Self-Organizing Hexagonal Lattice", font_size=28, font="Monospace")
+        title = Text("Self-Organization: Hexagon Grid", font_size=28, font="Monospace")
         title.to_edge(UP)
         self.add(title)
 
-        # Create agents with random positions
-        n_agents = 40
+        # Create agents
+        n_agents = 35
         agents = []
 
         for _ in range(n_agents):
@@ -258,14 +280,13 @@ class SelfOrganizingPattern(Scene):
                 np.random.uniform(-2, 2),
                 0
             ])
-            agent = Dot(pos, radius=0.08, color=BLUE)
-            agent.velocity = np.random.uniform(-0.2, 0.2, 3)
-            agent.velocity[2] = 0
+            agent = Dot(pos, radius=0.1, color=BLUE)
+            agent.velocity = np.array([0., 0., 0.])
             agents.append(agent)
             self.add(agent)
 
-        # Target hexagonal spacing
-        target_spacing = 0.8
+        # Target spacing for hexagonal packing
+        target_spacing = 0.9
 
         def update_pattern(mob, dt):
             for i, agent in enumerate(agents):
@@ -276,262 +297,291 @@ class SelfOrganizingPattern(Scene):
                         continue
 
                     diff = agent.get_center() - other.get_center()
-                    dist = np.linalg.norm(diff)
+                    dist = np.linalg.norm(diff[:2])
 
                     if dist < 0.01:
-                        continue
+                        diff = np.random.rand(3) * 0.1
+                        dist = np.linalg.norm(diff[:2])
 
-                    # Spring-like force (Lennard-Jones potential)
-                    if dist < target_spacing * 1.5:
-                        # Repulsion at short range
-                        if dist < target_spacing * 0.7:
-                            force += (diff / dist) * 0.02
-                        # Attraction at medium range
-                        elif dist > target_spacing * 1.1:
-                            force -= (diff / dist) * 0.01
-                        # Optimal spacing - minimal force
-                        else:
-                            force += (diff / dist) * 0.001
+                    # Spring-like force
+                    if dist < target_spacing * 1.8:
+                        if dist < target_spacing * 0.8:
+                            # Push away if too close
+                            force += (diff / dist) * 0.15 * (target_spacing * 0.8 / dist)
+                        elif dist > target_spacing * 1.2:
+                            # Pull together if too far
+                            force -= (diff / dist) * 0.08
+                        # else: at ideal distance, minimal force
 
-                # Apply force with damping
-                agent.velocity += force
-                agent.velocity *= 0.95  # Damping
+                # Apply force with strong damping
+                agent.velocity += force * dt * 60
+                agent.velocity *= 0.85  # Damping
 
                 # Limit velocity
-                speed = np.linalg.norm(agent.velocity)
-                if speed > 0.2:
-                    agent.velocity = (agent.velocity / speed) * 0.2
+                speed = np.linalg.norm(agent.velocity[:2])
+                if speed > 0.5:
+                    agent.velocity = (agent.velocity / speed) * 0.5
 
                 # Update position
-                new_pos = agent.get_center() + agent.velocity
+                new_pos = agent.get_center() + agent.velocity * dt * 60
 
-                # Soft boundaries
-                if abs(new_pos[0]) > 4:
-                    agent.velocity[0] *= -0.5
-                if abs(new_pos[1]) > 2:
-                    agent.velocity[1] *= -0.5
-
-                new_pos[0] = np.clip(new_pos[0], -4.5, 4.5)
-                new_pos[1] = np.clip(new_pos[1], -2.5, 2.5)
+                # Soft boundaries with bounce
+                if abs(new_pos[0]) > 4.5:
+                    agent.velocity[0] *= -0.7
+                    new_pos[0] = np.clip(new_pos[0], -4.5, 4.5)
+                if abs(new_pos[1]) > 2.5:
+                    agent.velocity[1] *= -0.7
+                    new_pos[1] = np.clip(new_pos[1], -2.5, 2.5)
 
                 agent.move_to(new_pos)
 
-                # Color by local density
+                # Color by number of neighbors at ideal distance
                 neighbors = sum(1 for o in agents if i != agents.index(o) and
-                              np.linalg.norm(agent.get_center() - o.get_center()) < target_spacing * 1.5)
+                              0.7 < np.linalg.norm(agent.get_center() - o.get_center()) < 1.1)
 
                 if neighbors == 6:
-                    agent.set_color(GREEN)  # Optimal hexagonal
+                    agent.set_color(GREEN)  # Perfect hexagon
                 elif neighbors > 6:
-                    agent.set_color(RED)    # Too crowded
+                    agent.set_color(RED)    # Overcrowded
+                elif neighbors < 4:
+                    agent.set_color(BLUE)   # Isolated
                 else:
-                    agent.set_color(BLUE)   # Too sparse
+                    agent.set_color(YELLOW) # Forming pattern
 
         dummy = Dot(ORIGIN, radius=0)
         dummy.add_updater(update_pattern)
         self.add(dummy)
 
-        self.wait(18)
+        self.wait(20)
         dummy.remove_updater(update_pattern)
+
+        # Add description
+        desc = Text(
+            "Dots push apart when too close and pull together\\n"
+            "when too far. They settle into a honeycomb pattern\\n"
+            "where each dot has exactly 6 neighbors (green)",
+            font_size=18,
+            font="Monospace",
+            color=GRAY
+        ).to_edge(DOWN)
+        self.play(FadeIn(desc))
+        self.wait(2)
 
 
 class ConsensusEmergence(Scene):
-    """Novel: Swarm consensus decision-making"""
+    """Swarm consensus decision-making"""
 
     def construct(self):
-        title = Text("Consensus: Two Opinions Merge", font_size=28, font="Monospace")
+        title = Text("Consensus: Group Decision", font_size=28, font="Monospace")
         title.to_edge(UP)
         self.add(title)
 
-        # Two target locations
-        target_a = Circle(radius=0.4, color=RED, fill_opacity=0.3).shift(LEFT * 3)
-        target_b = Circle(radius=0.4, color=BLUE, fill_opacity=0.3).shift(RIGHT * 3)
-        self.add(target_a, target_b)
+        # Two options
+        option_a = Square(side_length=0.6, color=RED, fill_opacity=0.4).shift(LEFT * 4)
+        option_b = Square(side_length=0.6, color=BLUE, fill_opacity=0.4).shift(RIGHT * 4)
+        label_a = Text("Option A", font_size=18, font="Monospace").next_to(option_a, UP)
+        label_b = Text("Option B", font_size=18, font="Monospace").next_to(option_b, UP)
+        self.add(option_a, option_b, label_a, label_b)
 
-        # Agents with initial opinions
-        n_agents = 50
+        # Agents starting in middle
+        n_agents = 40
         agents = []
 
         for i in range(n_agents):
             pos = np.array([np.random.uniform(-1, 1), np.random.uniform(-1, 1), 0])
-            agent = Dot(pos, radius=0.06)
+            agent = Dot(pos, radius=0.08)
 
-            # Random initial opinion
-            if i < n_agents // 2:
-                agent.opinion = 0  # Team A
+            # Random initial preference
+            if np.random.random() < 0.5:
+                agent.preference = 0  # Prefer A
                 agent.set_color(RED)
             else:
-                agent.opinion = 1  # Team B
+                agent.preference = 1  # Prefer B
                 agent.set_color(BLUE)
 
-            agent.confidence = np.random.uniform(0.3, 1.0)
+            agent.certainty = np.random.uniform(0.3, 0.8)
             agents.append(agent)
             self.add(agent)
 
-        # Opinion counter
-        counter_text = Text("Red: 25 | Blue: 25", font_size=20, color=WHITE, font="Monospace")
+        # Counter
+        counter_text = Text("Red: 20  Blue: 20", font_size=20, font="Monospace")
         counter_text.to_corner(DR)
         self.add(counter_text)
 
         def update_consensus(mob, dt):
-            # Update opinions based on neighbors
+            # Agents influence neighbors
             for agent in agents:
                 # Find nearby agents
                 neighbors = [a for a in agents if a != agent and
-                           np.linalg.norm(a.get_center() - agent.get_center()) < 1.0]
+                           np.linalg.norm(a.get_center() - agent.get_center()) < 1.2]
 
                 if neighbors:
-                    # Count neighbor opinions
-                    neighbor_opinions = [n.opinion for n in neighbors]
-                    avg_opinion = np.mean(neighbor_opinions)
+                    # Count neighbor preferences
+                    neighbor_prefs = [n.preference for n in neighbors]
+                    pct_same = sum(1 for p in neighbor_prefs if p == agent.preference) / len(neighbor_prefs)
 
-                    # Probabilistic opinion change based on confidence
-                    if np.random.random() > agent.confidence:
-                        if avg_opinion < 0.5 and agent.opinion == 1:
-                            agent.opinion = 0
-                            agent.set_color(RED)
-                        elif avg_opinion > 0.5 and agent.opinion == 0:
-                            agent.opinion = 1
-                            agent.set_color(BLUE)
+                    # Switch if outnumbered and uncertain
+                    if pct_same < 0.4 and np.random.random() > agent.certainty:
+                        agent.preference = 1 - agent.preference
+                        agent.set_color(RED if agent.preference == 0 else BLUE)
+                        agent.certainty = min(agent.certainty + 0.1, 0.95)
 
-                # Move towards preferred target
-                if agent.opinion == 0:
-                    target = target_a.get_center()
-                else:
-                    target = target_b.get_center()
-
+                # Move toward preferred option
+                target = option_a.get_center() if agent.preference == 0 else option_b.get_center()
                 direction = target - agent.get_center()
-                if np.linalg.norm(direction) > 0.1:
-                    direction = direction / np.linalg.norm(direction) * 0.03
-                    new_pos = agent.get_center() + direction
+                dist = np.linalg.norm(direction[:2])
+
+                if dist > 0.3:
+                    direction = direction / dist
+                    new_pos = agent.get_center() + direction * 0.08
                     agent.move_to(new_pos)
 
             # Update counter
-            red_count = sum(1 for a in agents if a.opinion == 0)
+            red_count = sum(1 for a in agents if a.preference == 0)
             blue_count = n_agents - red_count
-            new_text = Text(f"Red: {red_count} | Blue: {blue_count}",
-                          font_size=20, color=WHITE, font="Monospace")
+            new_text = Text(f"Red: {red_count}  Blue: {blue_count}",
+                          font_size=20, font="Monospace")
             new_text.to_corner(DR)
-            self.remove(counter_text)
-            self.add(new_text)
             counter_text.become(new_text)
 
         dummy = Dot(ORIGIN, radius=0)
         dummy.add_updater(update_consensus)
         self.add(dummy)
 
-        self.wait(20)
+        self.wait(18)
         dummy.remove_updater(update_consensus)
+
+        # Add description
+        desc = Text(
+            "Agents start with random preferences. They switch\\n"
+            "to match their neighbors if outnumbered. Eventually\\n"
+            "the group reaches agreement on one option",
+            font_size=18,
+            font="Monospace",
+            color=GRAY
+        ).to_edge(DOWN)
+        self.play(FadeIn(desc))
+        self.wait(2)
 
 
 class ComplexityMetricOverlay(Scene):
-    """Novel: Real-time complexity/entropy measurement"""
+    """Real-time complexity/entropy measurement"""
 
     def construct(self):
-        title = Text("Emergence: Order from Chaos (Entropy Measure)", font_size=26, font="Monospace")
+        title = Text("Emergence: Order From Chaos", font_size=28, font="Monospace")
         title.to_edge(UP)
         self.add(title)
 
         # Particles
-        n_particles = 60
+        n_particles = 50
         particles = []
 
         for _ in range(n_particles):
-            pos = np.array([np.random.uniform(-5, 5), np.random.uniform(-2, 2), 0])
-            particle = Dot(pos, radius=0.05, color=WHITE)
-            particle.velocity = np.random.uniform(-0.3, 0.3, 3)
+            pos = np.array([np.random.uniform(-5, 5), np.random.uniform(-2.5, 2.5), 0])
+            particle = Dot(pos, radius=0.06, color=WHITE)
+            particle.velocity = np.random.uniform(-2, 2, 3)
             particle.velocity[2] = 0
             particles.append(particle)
             self.add(particle)
 
-        # Entropy meter
-        entropy_bar = Rectangle(width=0.3, height=2, color=GREEN, fill_opacity=0.8)
-        entropy_bar.to_corner(UR).shift(DOWN * 0.5)
-        entropy_label = Text("Order", font_size=16, color=WHITE, font="Monospace")
-        entropy_label.next_to(entropy_bar, UP)
-        self.add(entropy_bar, entropy_label)
+        # Order meter
+        meter_bg = Rectangle(width=0.4, height=2.5, color=GRAY, fill_opacity=0.3)
+        meter_bg.to_corner(UR).shift(DOWN * 0.8)
+        meter_fill = Rectangle(width=0.4, height=0.1, color=RED, fill_opacity=0.9)
+        meter_fill.align_to(meter_bg, DOWN).align_to(meter_bg, RIGHT)
 
-        # Attractor (appears after some time)
+        meter_label_chaos = Text("Chaos", font_size=14, color=RED, font="Monospace")
+        meter_label_chaos.next_to(meter_bg, DOWN, buff=0.1)
+        meter_label_order = Text("Order", font_size=14, color=GREEN, font="Monospace")
+        meter_label_order.next_to(meter_bg, UP, buff=0.1)
+
+        self.add(meter_bg, meter_fill, meter_label_chaos, meter_label_order)
+
+        # Attractor appears after delay
         attractor = None
-        time_elapsed = 0
+        time_elapsed = [0]
 
-        def calculate_entropy():
-            # Calculate spatial distribution entropy
+        def calculate_order():
+            # Calculate how clustered particles are
             positions = np.array([p.get_center()[:2] for p in particles])
+            center = np.mean(positions, axis=0)
+            distances = [np.linalg.norm(p - center) for p in positions]
+            avg_dist = np.mean(distances)
 
-            # Grid-based entropy
-            grid_size = 10
-            hist, _, _ = np.histogram2d(positions[:, 0], positions[:, 1],
-                                       bins=grid_size, range=[[-5, 5], [-2, 2]])
-            hist = hist.flatten()
-            hist = hist / hist.sum()
-
-            # Shannon entropy
-            entropy = -np.sum(hist * np.log(hist + 1e-10))
-            max_entropy = np.log(grid_size * grid_size)
-
-            return entropy / max_entropy
+            # Normalized measure (0 = spread out, 1 = clustered)
+            order = 1 - min(avg_dist / 5.0, 1.0)
+            return order
 
         def update_particles(mob, dt):
-            nonlocal attractor, time_elapsed
-            time_elapsed += dt
+            time_elapsed[0] += dt
 
-            # Create attractor after 3 seconds
-            if time_elapsed > 3 and attractor is None:
-                attractor = Dot(ORIGIN, radius=0.2, color=YELLOW, fill_opacity=0.5)
-                self.add(attractor)
+            # Create attractor after 2 seconds
+            nonlocal attractor
+            if time_elapsed[0] > 2 and attractor is None:
+                attractor = Dot(ORIGIN, radius=0.25, color=YELLOW, fill_opacity=0.6)
+                attractor_ring = Circle(radius=0.35, color=YELLOW, stroke_width=2)
+                self.add(attractor_ring, attractor)
 
             for particle in particles:
-                # Random motion
-                particle.velocity += np.random.normal(0, 0.01, 3)
+                # Random brownian motion
+                particle.velocity += np.random.normal(0, 0.5, 3)
                 particle.velocity[2] = 0
 
                 # Attraction to center (after attractor appears)
                 if attractor is not None:
                     diff = attractor.get_center() - particle.get_center()
-                    dist = np.linalg.norm(diff)
+                    dist = np.linalg.norm(diff[:2])
                     if dist > 0.1:
-                        attraction = (diff / dist) * 0.02
+                        attraction = (diff / dist) * 0.3
                         particle.velocity += attraction
 
-                # Damping
-                particle.velocity *= 0.98
+                # Strong damping
+                particle.velocity *= 0.92
 
                 # Update position
-                new_pos = particle.get_center() + particle.velocity
+                new_pos = particle.get_center() + particle.velocity * dt * 60
 
                 # Bounce off boundaries
-                if abs(new_pos[0]) > 5:
-                    particle.velocity[0] *= -0.8
-                if abs(new_pos[1]) > 2:
-                    particle.velocity[1] *= -0.8
-
-                new_pos[0] = np.clip(new_pos[0], -5, 5)
-                new_pos[1] = np.clip(new_pos[1], -2, 2)
+                if abs(new_pos[0]) > 5.5:
+                    particle.velocity[0] *= -0.7
+                    new_pos[0] = np.clip(new_pos[0], -5.5, 5.5)
+                if abs(new_pos[1]) > 2.8:
+                    particle.velocity[1] *= -0.7
+                    new_pos[1] = np.clip(new_pos[1], -2.8, 2.8)
 
                 particle.move_to(new_pos)
 
-            # Update entropy visualization
-            entropy_normalized = calculate_entropy()
-            order = 1 - entropy_normalized  # Order is inverse of entropy
-
-            new_height = order * 2
-            new_bar = Rectangle(width=0.3, height=new_height, color=GREEN, fill_opacity=0.8)
-            new_bar.align_to(entropy_bar, DOWN).align_to(entropy_bar, RIGHT)
+            # Update order meter
+            order = calculate_order()
+            new_height = order * 2.5
+            new_fill = Rectangle(width=0.4, height=max(new_height, 0.1), fill_opacity=0.9)
+            new_fill.align_to(meter_bg, DOWN).align_to(meter_bg, RIGHT)
 
             # Color based on order
             if order > 0.7:
-                new_bar.set_fill(GREEN)
+                new_fill.set_fill(GREEN)
             elif order > 0.4:
-                new_bar.set_fill(YELLOW)
+                new_fill.set_fill(YELLOW)
             else:
-                new_bar.set_fill(RED)
+                new_fill.set_fill(RED)
 
-            entropy_bar.become(new_bar)
+            meter_fill.become(new_fill)
 
         dummy = Dot(ORIGIN, radius=0)
         dummy.add_updater(update_particles)
         self.add(dummy)
 
-        self.wait(16)
+        self.wait(14)
         dummy.remove_updater(update_particles)
+
+        # Add description
+        desc = Text(
+            "Random dots start scattered (chaos). A yellow\\n"
+            "attractor appears and pulls them together. The\\n"
+            "meter shows increasing order as they cluster",
+            font_size=18,
+            font="Monospace",
+            color=GRAY
+        ).to_edge(DOWN)
+        self.play(FadeIn(desc))
+        self.wait(2)
