@@ -177,6 +177,45 @@ Animated morphing between geographic (lat/long) and Cartesian coordinate grids.
 - Surface projection for signal strength
 - Real-time geodetic calculations
 
+### Topic 4: Swarm Behavior & Emergent Complexity
+Exploration of how simple individual rules create complex collective behaviors, from classic Boids flocking to novel entropy-measuring visualizations.
+
+#### Boids Flocking Algorithm
+Classic Reynolds' Boids with three rules: separation (avoid crowding), alignment (steer toward average heading), cohesion (steer toward average position).
+
+![Boids Flocking](media/animations/swarm_BoidsFlocking.gif)
+
+#### Ant Colony with Pheromone Trails
+Ant agents deposit pheromone trails while carrying food, creating emergent optimal pathfinding through collective stigmergy.
+
+![Ant Colony](media/animations/swarm_AntColonyPheromone.gif)
+
+#### Self-Organizing Hexagonal Lattice (Novel)
+Agents with simple spring-like attraction/repulsion forces spontaneously form stable hexagonal crystal patterns, colored by local density.
+
+![Self-Organizing Pattern](media/animations/swarm_SelfOrganizingPattern.gif)
+
+#### Consensus Emergence (Novel)
+Two competing opinions (red/blue teams) converge to single consensus through local neighbor interactions with confidence-based switching.
+
+![Consensus Emergence](media/animations/swarm_ConsensusEmergence.gif)
+
+#### Complexity Metric Overlay (Novel)
+Real-time Shannon entropy calculation visualizes order emerging from chaos as particles organize around an attractor.
+
+![Complexity Metric](media/animations/swarm_ComplexityMetricOverlay.gif)
+
+**Code**: `swarm_emergence.py`
+
+**Features Implemented:**
+- Boids algorithm: separation, alignment, cohesion forces
+- Stigmergy-based pheromone deposition and evaporation
+- Lennard-Jones potential for self-organization
+- Opinion dynamics with confidence-weighted updates
+- Real-time entropy calculation from spatial distribution
+- Velocity limiting and boundary handling
+- Color-coded state visualization
+
 ## Best Practices
 
 ### Installation
