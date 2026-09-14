@@ -1,4 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/swarm_emergence/480p15/partial_movie_files/AntColonyPheromone/2118183852_1204183948_2214027441.mp4'
-file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/swarm_emergence/480p15/partial_movie_files/AntColonyPheromone/366519484_2047775231_428331602.mp4'
-file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/swarm_emergence/480p15/partial_movie_files/AntColonyPheromone/366519484_2645707024_578279980.mp4'
