@@ -1,0 +1,8 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/2118183852_3172906901_223132457.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_7784528_1384856410.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_1977240707_2512199565.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_847192958_1101831598.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_4059889664_454685228.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_3446675728_2365559635.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/CoordinateGridTransform/366519484_2645707024_1355260507.mp4'
