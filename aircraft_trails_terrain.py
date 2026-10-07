@@ -11,21 +11,22 @@ class AircraftTrails2D(Scene):
             x_range=[-10, 10, 2],
             y_range=[-10, 10, 2],
         )
-        axes_labels = axes.get_axis_labels(x_label="X", y_label="Y")
         
         path = VMobject()
         t_vals = np.linspace(0, 2*np.pi, 300)
         points = [axes.c2p(6*np.cos(t), 4*np.sin(2*t)) for t in t_vals]
         path.set_points_smoothly(points)
-        path.set_stroke(WHITE, 1, "rough")
+        path.set_stroke(WHITE, 1)
         
         aircraft = Triangle().scale(0.2).rotate(PI/2).set_fill(BLUE, opacity=0.8).set_stroke(BLUE)
         trail = TracedPath(aircraft.get_center, stroke_color=RED, stroke_width=3, dissipating_time=2)
         
-        self.add(axes, axes_labels, path, trail, aircraft)
+        self.add(axes, path, trail, aircraft)
         
         def updater(mob, dt):
-            mob.move_to(path.point_from_proportion(mob.time))
+            # Use mob.get_value? fallback simple oscillation
+            prog = (self.time % 10) / 10
+            mob.move_to(path.point_from_proportion(prog))
             mob.rotate(0.05)
         
         aircraft.add_updater(updater)
