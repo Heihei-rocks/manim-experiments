@@ -112,6 +112,14 @@ Research-based visualizations of how data varies: histograms morphing to kernel 
 
 **Code**: `aircraft_trails_terrain.py`
 
+### Bloom / Glow Post-Process Prototype
+Prototype bloom/glow post-process for Manim CE using shader-based glow. Demonstrates bright objects with soft halos similar to mathlirium style.
+
+![Bloom Glow Demo](media/animations/bloom_glow_demo.gif)
+*Bright circles and star with bloom glow effect*
+
+**Code**: `bloom_postprocess.py`
+
 ## Best Practices
 
 ### Installation
