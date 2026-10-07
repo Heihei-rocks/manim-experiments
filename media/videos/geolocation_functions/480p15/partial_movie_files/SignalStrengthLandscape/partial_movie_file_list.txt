@@ -1,0 +1,6 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/SignalStrengthLandscape/1072904900_1666612803_2206776614.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/SignalStrengthLandscape/3497619564_1977032612_2500811092.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/SignalStrengthLandscape/3497619564_3810704435_1632502163.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/SignalStrengthLandscape/2548933720_3712135478_3428411684.mp4'
+file 'file:/Users/djohnson334/Documents/GIT/Heihei/manim-experiments/media/videos/geolocation_functions/480p15/partial_movie_files/SignalStrengthLandscape/1971836592_2186781363_2530849844.mp4'

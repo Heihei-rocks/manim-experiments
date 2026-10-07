@@ -105,20 +105,116 @@ Research-based visualizations of how data varies: histograms morphing to kernel 
 **Code**: `data_variation_analysis.py`
 
 ### Topic 2: Aircraft with Trails/Sensors Over Terrain
-2D top-down flight path animation with fading trails and sensor pulses over synthetic terrain.
+Visualizations of aircraft flight paths, sensor coverage, and terrain mapping in both 2D and 3D. Features fading trails, pulsing sensors, formation flight, and novel heat-map coverage analysis.
+
+#### 2D Top-Down with Sensor Pulses
+Aircraft following an elliptical path with directional heading, fading red trail, and expanding blue sensor pulses.
 
 ![Aircraft 2D Top-Down](media/animations/aircraft_2d_topdown.gif)
-*Aircraft following an elliptical path with trails and sensors*
+
+#### 3D Terrain with Dynamic Flight Path
+Aircraft flying over multi-frequency procedural terrain with elevation-responsive coloring, sensor sphere, and spiral flight path.
+
+![Aircraft 3D Terrain](media/animations/aircraft_3d_terrain.gif)
+
+#### Formation Flight (Novel)
+Three coordinated aircraft in formation with independent trails and synchronized sensor coverage over terrain.
+
+![Multi-Aircraft Formation](media/animations/aircraft_formation.gif)
+
+#### Sensor Coverage Heat Map (Novel)
+Accumulated sensor intensity visualization showing red (high coverage) to blue (low coverage) mapping as aircraft patrols terrain.
+
+![Sensor Heat Map](media/animations/aircraft_heatmap.gif)
 
 **Code**: `aircraft_trails_terrain.py`
 
-### Bloom / Glow Post-Process Prototype
-Prototype bloom/glow post-process for Manim CE using shader-based glow. Demonstrates bright objects with soft halos similar to mathlirium style.
+**Features Implemented:**
+- Fading trail visualization with `TracedPath`
+- Directional aircraft heading based on velocity vector
+- Expanding sensor pulse rings
+- 3D procedural terrain generation
+- Multi-aircraft coordination
+- Heat-map accumulation algorithm
+- Camera movement and 3D perspective control
 
-![Bloom Glow Demo](media/animations/bloom_glow_demo.gif)
-*Bright circles and star with bloom glow effect*
+### Topic 3: Geolocation Function Visualization
+Comprehensive exploration of geographic coordinate systems, distance calculations, and positioning algorithms with both traditional and novel visualizations.
 
-**Code**: `bloom_postprocess.py`
+#### Great Circle Routes on Sphere
+Geodesic paths between world cities using spherical linear interpolation (slerp) on a 3D globe.
+
+![Great Circle Routes](media/animations/geolocation_GreatCircleRoute.gif)
+
+#### Haversine Distance Calculation
+Distance formula visualization between NYC and London with expanding range circles and precise kilometer calculation.
+
+![Haversine Distance](media/animations/geolocation_HaversineDistance.gif)
+
+#### GPS Trilateration
+Position finding from multiple satellite distances showing intersection of range circles.
+
+![Trilateration](media/animations/geolocation_TrilaterationVisualization.gif)
+
+#### Coordinate System Transformation
+Animated morphing between geographic (lat/long) and Cartesian coordinate grids.
+
+![Coordinate Transform](media/animations/geolocation_CoordinateGridTransform.gif)
+
+#### Signal Strength Landscape (Novel)
+3D surface visualization showing combined signal strength from multiple towers, with device path following the landscape topology.
+
+![Signal Strength Landscape](media/animations/geolocation_SignalStrengthLandscape.gif)
+
+**Code**: `geolocation_functions.py`
+
+**Features Implemented:**
+- Spherical linear interpolation for great circles
+- Haversine distance formula with Earth radius
+- Trilateration positioning algorithm
+- Dynamic coordinate system transformations
+- Inverse-square law signal propagation
+- Surface projection for signal strength
+- Real-time geodetic calculations
+
+### Topic 4: Swarm Behavior & Emergent Complexity
+Exploration of how simple individual rules create complex collective behaviors, from classic Boids flocking to novel entropy-measuring visualizations.
+
+#### Boids Flocking Algorithm
+Classic Reynolds' Boids with three rules: separation (avoid crowding), alignment (steer toward average heading), cohesion (steer toward average position).
+
+![Boids Flocking](media/animations/swarm_BoidsFlocking.gif)
+
+#### Ant Colony with Pheromone Trails
+Ant agents deposit pheromone trails while carrying food, creating emergent optimal pathfinding through collective stigmergy.
+
+![Ant Colony](media/animations/swarm_AntColonyPheromone.gif)
+
+#### Self-Organizing Hexagonal Lattice (Novel)
+Agents with simple spring-like attraction/repulsion forces spontaneously form stable hexagonal crystal patterns, colored by local density.
+
+![Self-Organizing Pattern](media/animations/swarm_SelfOrganizingPattern.gif)
+
+#### Consensus Emergence (Novel)
+Two competing opinions (red/blue teams) converge to single consensus through local neighbor interactions with confidence-based switching.
+
+![Consensus Emergence](media/animations/swarm_ConsensusEmergence.gif)
+
+#### Complexity Metric Overlay (Novel)
+Real-time Shannon entropy calculation visualizes order emerging from chaos as particles organize around an attractor.
+
+![Complexity Metric](media/animations/swarm_ComplexityMetricOverlay.gif)
+
+**Code**: `swarm_emergence.py`
+
+**Features Implemented:**
+- Boids algorithm: separation, alignment, cohesion forces
+- Stigmergy-based pheromone deposition and evaporation
+- Lennard-Jones potential for self-organization
+- Opinion dynamics with confidence-weighted updates
+- Real-time entropy calculation from spatial distribution
+- Velocity limiting and boundary handling
+- Color-coded state visualization
 
 ## Best Practices
 
