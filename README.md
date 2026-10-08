@@ -146,6 +146,14 @@ Prototype bloom/glow post-process for Manim CE using shader-based glow. Demonstr
 
 **Code**: `bloom_postprocess.py`
 
+### Bloom Flight Over 3D Terrain
+Flight over procedural terrain with bright emissive aircraft, fading trails and sensor sphere. Designed for bloom post-process – high-emissive colors and additive transparency match mathlirium style.
+
+![Bloom Terrain Flight](media/animations/bloom_terrain_flight.gif)
+*Aircraft with bright trails over terrain with bloom-ready emissive shading*
+
+**Code**: `bloom_terrain_flight.py`
+
 ### Topic 3: Geolocation Function Visualization
 Comprehensive exploration of geographic coordinate systems, distance calculations, and positioning algorithms with both traditional and novel visualizations.
 
