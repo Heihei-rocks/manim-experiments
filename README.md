@@ -138,6 +138,14 @@ Accumulated sensor intensity visualization showing red (high coverage) to blue (
 - Heat-map accumulation algorithm
 - Camera movement and 3D perspective control
 
+### Bloom / Glow Post-Process Prototype
+Prototype bloom/glow post-process for Manim CE using shader-based glow. Demonstrates bright objects with soft halos similar to mathlirium style.
+
+![Bloom Glow Demo](media/animations/bloom_glow_demo.gif)
+*Bright circles and star with bloom glow effect*
+
+**Code**: `bloom_postprocess.py`
+
 ### Topic 3: Geolocation Function Visualization
 Comprehensive exploration of geographic coordinate systems, distance calculations, and positioning algorithms with both traditional and novel visualizations.
 
